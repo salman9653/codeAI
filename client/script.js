@@ -14,7 +14,7 @@ const loader = (element) => {
   element.textContent = '';
   loadInterval = setInterval(() => {
     element.textContent += '.';
-    if (element.textContent === '...'){
+    if (element.textContent === '....'){
       element.textContent = '';
     }
   },300)
@@ -58,3 +58,30 @@ const chatStripe = (isAi, value, uniqueId) => {
     `
   )
 }
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const data = new FormData(form)
+
+  //user chat stripe
+  chatContainer.innerHTML += chatStripe(false, data.get('prompt'))
+
+  form.reset();
+
+  //bot chat stripe
+  const uniqueId = generateUniqueId();
+  chatContainer.innerHTML += chatStripe(true, ' ', uniqueId);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+
+  const messageDiv = document.getElementById(uniqueId);
+  loader(messageDiv);
+}
+
+form.addEventListener('submit', handleSubmit);
+form.addEventListener('keyup', (e) => {
+  if (e.keyCode === 13 ){
+    handleSubmit(e);
+  }
+})
+
